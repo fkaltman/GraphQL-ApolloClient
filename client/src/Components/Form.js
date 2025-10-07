@@ -7,25 +7,62 @@ function Form() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
-  const [createUser, { error }] = useMutation(CREATE_USER_MUTATION);
+  const [createUser, { loading, error, data }] =
+    useMutation(CREATE_USER_MUTATION);
 
-  const addUser = () => {
-    createUser({
-      variables: {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        password: password,
-      },
-    });
+  const addUser = async () => {
+    // Clear any previous success message
+    setSuccessMessage("");
 
-    if (error) {
-      console.log(error);
+    try {
+      const result = await createUser({
+        variables: {
+          firstName,
+          lastName,
+          email,
+          password,
+        },
+      });
+
+      // If we get here, the mutation succeeded
+      if (result.data) {
+        // Clear all form fields
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setPassword("");
+
+        // Show success message
+        setSuccessMessage("User created successfully!");
+
+        // Hide success message after 3 seconds
+        setTimeout(() => setSuccessMessage(""), 3000);
+      }
+    } catch (err) {
+      // Error is handled automatically by Apollo and available in the `error` variable
+      console.log("Failed to create user:", err);
     }
   };
   return (
     <div>
+      {/* Success Message */}
+      {successMessage && (
+        <div
+          style={{ color: "green", marginBottom: "10px", fontWeight: "bold" }}
+        >
+          {successMessage}
+        </div>
+      )}
+
+      {/* Error Message */}
+      {error && (
+        <div style={{ color: "red", marginBottom: "10px", fontWeight: "bold" }}>
+          Error: {error.message}
+        </div>
+      )}
+
       <input
         type="text"
         placeholder="First Name"
@@ -54,7 +91,9 @@ function Form() {
           setPassword(e.target.value);
         }}
       />
-      <button onClick={addUser}> Create User</button>
+      <button onClick={addUser} disabled={loading}>
+        {loading ? "Creating User..." : "Create User"}
+      </button>
     </div>
   );
 }
