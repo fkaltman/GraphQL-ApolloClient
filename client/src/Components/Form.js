@@ -65,6 +65,7 @@ function Form() {
 
       <input
         type="text"
+        value={firstName}
         placeholder="First Name"
         onChange={(e) => {
           setFirstName(e.target.value);
@@ -72,6 +73,7 @@ function Form() {
       />
       <input
         type="text"
+        value={lastName}
         placeholder="Last Name"
         onChange={(e) => {
           setLastName(e.target.value);
@@ -79,6 +81,7 @@ function Form() {
       />
       <input
         type="text"
+        value={email}
         placeholder="Email"
         onChange={(e) => {
           setEmail(e.target.value);
@@ -86,6 +89,7 @@ function Form() {
       />
       <input
         type="text"
+        value={password}
         placeholder="Password"
         onChange={(e) => {
           setPassword(e.target.value);
