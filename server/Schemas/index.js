@@ -20,10 +20,12 @@ const RootQuery = new GraphQLObjectType({
         limit: { type: GraphQLInt }
       },
       resolve(parent, args) {
+        const reversed = [...userData].reverse();
+        console.log("First 5 reversed users:", reversed.slice(0, 5).map(u => ({ id: u.id, firstName: u.firstName })));
         if (args.limit) {
-          return userData.slice(0, args.limit);
+          return reversed.slice(0, args.limit);
         }
-        return userData;
+        return reversed;
       },
     },
   },
