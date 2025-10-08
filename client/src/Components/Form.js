@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { CREATE_USER_MUTATION } from "../GraphQL/Mutations";
-import { useMutation } from "@apollo/client";
+import { useMutation, useApolloClient } from "@apollo/client";
 
 function Form() {
   const [firstName, setFirstName] = useState("");
@@ -9,8 +9,9 @@ function Form() {
   const [password, setPassword] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  const [createUser, { loading, error, data }] =
-    useMutation(CREATE_USER_MUTATION);
+  const [createUser, { loading, error }] = useMutation(CREATE_USER_MUTATION);
+
+  const client = useApolloClient();
 
   const addUser = async () => {
     // Clear any previous success message
@@ -36,6 +37,9 @@ function Form() {
 
         // Show success message
         setSuccessMessage("User created successfully!");
+
+        // Clear Apollo cache to remove any cached errors
+        client.resetStore();
 
         // Hide success message after 3 seconds
         setTimeout(() => setSuccessMessage(""), 3000);
